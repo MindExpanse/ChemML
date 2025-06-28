@@ -41,31 +41,8 @@ pre_smogn = False
 # ----------
 # Data folder
 # 读取数据
-# data = pd.read_excel('data.xlsx', skiprows=[0])[['Ueff/K', 'θ1/°', 'd1/Å', 'θ2/°', 'd2/Å']]
-# data = pd.read_excel('data20240115.xlsx', skiprows=[0])[['Ueff/K', 'θ1/°', 'd1/Å', 'θ2/°', 'd2/Å']]
-# data = pd.read_excel('data20240115.xlsx', sheet_name=0)[['compound', 'Ueff/K', 'θ1/°', 'd1/Å', 'θ2/°', 'd2/Å']]
-# data = pd.read_excel('data20240401.xlsx', sheet_name=0)[['compound', 'Ueff/K', 'θ1/°', 'd1/Å', 'θ2/°', 'd2/Å']]
-data = pd.read_excel('250416.xlsx', sheet_name=0)[['compound', 'Ueff/K', 'θ1/°', 'd1/Å', 'θ2/°', 'd2/Å']]
-# model_path_dir = "output/3/xgboost/"
-# model_path_dir = "output/3/catboost/"
-# model_path_dir = "output/3/lightgbm/"
-# model_path_dir = "output/3/randomforest/"
-
+data = pd.read_excel('dataset.xlsx', sheet_name=0)[['compound', 'Ueff/K', 'θ1/°', 'd1/Å', 'θ2/°', 'd2/Å']]
 model_path_dir = "output/416/xgboost/"
-# model_path_dir = "output/416/catboost/"
-# model_path_dir = "output/416/lightgbm/"
-# model_path_dir = "output/416/randomforest/"
-
-
-# model_path_dir = "output/416-smogn/xgboost/"
-# model_path_dir = "output/416-smogn/catboost/"
-# model_path_dir = "output/416-smogn/lightgbm/"
-# model_path_dir = "output/416-smogn/randomforest/"
-
-
-# model_path_dir = "output/3-smogn/xgboost/"
-# model_path_dir = "output/3-smogn-1/xgboost/"
-# model_path_dir = "output/3-smogn/catboost/"
 output_file = os.path.join(model_path_dir, "bayes_opt.csv")
 error_analysis_file = os.path.join(model_path_dir, "error_analysis.csv")
 
