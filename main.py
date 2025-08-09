@@ -33,7 +33,7 @@ importlib.reload(rforest)
 
 pca_decomposition = False
 log_preprocess = False
-train_mode = False # True/False
+train_mode = True # True/False
 smogn_mode = False
 pre_smogn = False
 
@@ -41,7 +41,7 @@ pre_smogn = False
 # ----------
 # Data folder
 # 读取数据
-data = pd.read_excel('dataset.xlsx', sheet_name=0)[['compound', 'Ueff/K', 'θ1/°', 'd1/Å', 'θ2/°', 'd2/Å']]
+data = pd.read_excel('dataset.xlsx', sheet_name=0)[['compound', 'Ueff (cm-1)', 'θ1 (°)', 'd1 (Å)', 'θ (°)', 'd2 (Å)']]
 model_path_dir = "output/416/xgboost/"
 output_file = os.path.join(model_path_dir, "bayes_opt.csv")
 error_analysis_file = os.path.join(model_path_dir, "error_analysis.csv")
@@ -64,12 +64,12 @@ model_path = os.path.join(model_path_dir, f'seed-{seed}.bin')
 # model_path = os.path.join(model_path_dir, f'seed-{seed}.joblib')
 
 # 删除自变量或因变量为空的样本
-data.dropna(subset=['Ueff/K', 'θ1/°', 'd1/Å', 'θ2/°', 'd2/Å'], inplace=True)
+data.dropna(subset=['Ueff (cm-1)', 'θ1 (°)', 'd1 (Å)', 'θ (°)', 'd2 (Å)'], inplace=True)
 
 # 提取自变量和因变量
-X = data[['θ1/°', 'd1/Å', 'θ2/°', 'd2/Å']].values
+X = data[['θ1 (°)', 'd1 (Å)', 'θ (°)', 'd2 (Å)']].values
 # print("取对数前：")
-y = data['Ueff/K'].values
+y = data['Ueff (cm-1)'].values
 compound = data['compound'].values
 if log_preprocess:
     print("取对数后：")
@@ -116,7 +116,7 @@ if pre_smogn:
     print('++++++++++++++++++SMOGN starting++++++++++++++++++')
     train_data = np.concatenate((X, y.reshape(-1, 1)), axis=-1)
     # reset_index
-    train_pd = pd.DataFrame(train_data, columns=['θ1/°', 'd1/Å', 'θ2/°', 'd2/Å', 'Ueff/K']).reset_index(drop=True)
+    train_pd = pd.DataFrame(train_data, columns=['θ1 (°)', 'd1 (Å)', 'θ (°)', 'd2 (Å)', 'Ueff (cm-1)']).reset_index(drop=True)
 
     n_tries = 0
     done = False
@@ -152,8 +152,8 @@ if pre_smogn:
 
     # 假设你的DataFrame叫做 train_smogn
     train_smogn.to_csv(os.path.join(model_path_dir, 'synt.csv'), index=False)
-    X = train_smogn[['θ1/°', 'd1/Å', 'θ2/°', 'd2/Å']].values
-    y = train_smogn['Ueff/K'].values
+    X = train_smogn[['θ1 (°)', 'd1 (Å)', 'θ (°)', 'd2 (Å)']].values
+    y = train_smogn['Ueff(cm-1)'].values
     compound = np.concatenate([compound, np.ones([603 - 449])], axis=0)
 
 
@@ -184,7 +184,7 @@ if train_mode:
             print('++++++++++++++++++SMOGN starting++++++++++++++++++')
             train_data = np.concatenate((X_train, y_train.reshape(-1, 1)), axis=-1)
             # reset_index
-            train_pd = pd.DataFrame(train_data, columns=['θ1/°', 'd1/Å', 'θ2/°', 'd2/Å', 'Ueff/K']).reset_index(drop=True)
+            train_pd = pd.DataFrame(train_data, columns=['θ1 (°)', 'd1 (Å)', 'θ (°)', 'd2 (Å)', 'Ueff (cm-1)']).reset_index(drop=True)
 
             n_tries = 0
             done = False
@@ -218,8 +218,8 @@ if train_mode:
                     else:
                         raise
 
-            X_train = train_smogn[['θ1/°', 'd1/Å', 'θ2/°', 'd2/Å']].values
-            y_train = train_smogn['Ueff/K'].values
+            X_train = train_smogn[['θ1 (°)', 'd1 (Å)', 'θ (°)', 'd2 (Å)']].values
+            y_train = train_smogn['Ueff(cm-1)'].values
 
         print(f"X_train.shape: {X_train.shape}, X_test.shape: {X_test.shape}, y_train.shape: {y_train.shape}, y_test.shape: {y_test.shape}")
 
@@ -280,8 +280,8 @@ else:
         train_data = np.concatenate((X_train, y_train.reshape(-1, 1)), axis=-1)
         train_data_1 = np.concatenate((compound_train.reshape(-1, 1), X_train, y_train.reshape(-1, 1)), axis=-1)
         # reset_index
-        train_pd = pd.DataFrame(train_data, columns=['θ1/°', 'd1/Å', 'θ2/°', 'd2/Å', 'Ueff/K']).reset_index(drop=True)
-        train_pd_1 = pd.DataFrame(train_data_1, columns=['Compound', 'θ1/°', 'd1/Å', 'θ2/°', 'd2/Å', 'Ueff/K']).reset_index(drop=True)
+        train_pd = pd.DataFrame(train_data, columns=['θ1 (°)', 'd1 (Å)', 'θ (°)', 'd2 (Å)', 'Ueff (cm-1)']).reset_index(drop=True)
+        train_pd_1 = pd.DataFrame(train_data_1, columns=['Compound', 'θ1 (°)', 'd1 (Å)', 'θ (°)', 'd2 (Å)', 'Ueff(cm-1)']).reset_index(drop=True)
         train_pd_1.to_csv(os.path.join(model_path_dir, 'origin.csv'), index=False)
 
         # sns.histplot(train_pd['Ueff/K'], bins=50)
@@ -331,8 +331,8 @@ else:
 
         train_smogn.to_csv(os.path.join(model_path_dir, 'smogn.csv'), index=False)
 
-        X_train = train_smogn[['θ1/°', 'd1/Å', 'θ2/°', 'd2/Å']].values
-        y_train = train_smogn['Ueff/K'].values
+        X_train = train_smogn[['θ1 (°)', 'd1 (Å)', 'θ (°)', 'd2 (Å)']].values
+        y_train = train_smogn['Ueff(cm-1)'].values
 
     # structure_list, Ueff_list = [], []
     result = []
